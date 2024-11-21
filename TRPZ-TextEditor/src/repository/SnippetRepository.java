@@ -1,37 +1,35 @@
 package repository;
 
 import models.Snippet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SnippetRepository {
-    private List<Snippet> snippets = new ArrayList<>();
+    private Map<String, Snippet> snippets = new HashMap<>();
 
-    // CRUD-операції
-    public void save(Snippet snippet) {
-        snippets.add(snippet);
+    public Snippet findByTrigger(String trigger) {
+        return snippets.get(trigger); // Пошук сніпету за тригером
     }
 
-    public Optional<Snippet> findByTrigger(String trigger) {
-        return snippets.stream()
-                .filter(snippet -> snippet.getTrigger().equalsIgnoreCase(trigger))
-                .findFirst();
+    public void addSnippet(Snippet snippet) {
+        snippets.put(snippet.getTrigger(), snippet); // Додавання сніпету
     }
 
-    public List<Snippet> findAll() {
-        return new ArrayList<>(snippets);
+    public Snippet deleteByTrigger(String trigger) {
+        return snippets.remove(trigger); // Видалення сніпету за тригером
     }
 
-    public List<Snippet> findSimilarTriggers(String prefix) {
-        return snippets.stream()
-                .filter(snippet -> snippet.getTrigger().startsWith(prefix))
-                .toList();
-    }
-
-    public void deleteById(int id) {
-        snippets.removeIf(snippet -> snippet.getId() == id);
+    public Map<String, String> findSuggestions(String trigger) {
+        Map<String, String> suggestions = new HashMap<>();
+        for (String key : snippets.keySet()) {
+            if (key.startsWith(trigger)) {
+                suggestions.put(key, snippets.get(key).getContent());
+            }
+        }
+        return suggestions;
     }
 }
+
 
 
