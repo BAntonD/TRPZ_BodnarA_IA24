@@ -2,12 +2,30 @@ package models;
 
 public class SyntaxHighlighter {
     private int id;
-    private String languageName;
-    private String regexPattern;
-    private String backlightColor;
+    private String name;
 
-    // Гетери та сетери (не включені для стислості)
+    public SyntaxHighlighter(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
+
 
 
 
