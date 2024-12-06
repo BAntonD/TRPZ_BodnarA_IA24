@@ -2,17 +2,12 @@ package models;
 
 
 public class Snippet {
-    private int id; // Унікальний ідентифікатор сніпету
-    private String trigger; // Вміст сніпету
-    private String content; // Мова програмування
+    private String trigger; // тригер сніпета
+    private String content; // контент сніпета
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public Snippet(String trigger, String content) {
+        this.trigger = trigger;
+        this.content = content;
     }
 
     public String getTrigger() {
@@ -31,11 +26,9 @@ public class Snippet {
         this.content = content;
     }
 
-    public Snippet(String trigger, String content) {
-        this.trigger = trigger;
-        this.content = content;
-    }
+
 }
+
 
 
 
