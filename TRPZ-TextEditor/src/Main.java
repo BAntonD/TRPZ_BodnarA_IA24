@@ -5,8 +5,10 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import Flyweight.SyntaxHighlighterProcessor;
 import Observer.Observer;
-import Observer.SyntaxHighlighterService;
+//import Observer.SyntaxHighlighterService;
 import Observer.Subject;
 import Observer.AutoSave;
 import TemplateMethod.SnippetProcessor;
@@ -93,16 +95,28 @@ public class Main implements Subject {
 
 
         // Додаємо підписників
-        addObserver(new SyntaxHighlighterService(textPane));
+        addObserver(new SyntaxHighlighterProcessor(textPane));
+        //addObserver(new SyntaxHighlighterService(textPane));
         addObserver(new AutoSave());
 
     }
 
     private void setupKeyListener(JTextPane textPane) {
         textPane.addKeyListener(new KeyAdapter() {
+            private boolean ctrlPressed = false; // Змінна для відстеження стану Ctrl
             @Override
             public void keyPressed(KeyEvent e) {
+
                 if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                    if (ctrlPressed) {
+                        ctrlPressed = false;
+                    }else {
+                        ctrlPressed = true;
+                    }
+                }
+
+                // Перевірка, чи натиснуто Tab, коли Ctrl вже зажатий
+                if (ctrlPressed && e.getKeyCode() == KeyEvent.VK_TAB) {
                     System.out.println("(1)Ctrl pressed"); // Логування натискання Ctrl
                     String trigger = getTriggerFromText(textPane); // Отримуємо тригер
                     System.out.println("(2)Trigger to process: " + trigger); // Логування тригера

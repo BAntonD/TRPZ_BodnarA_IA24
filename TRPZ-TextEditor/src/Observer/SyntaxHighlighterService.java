@@ -1,5 +1,5 @@
 package Observer;
-
+/*
 import models.SyntaxHighlighterWord;
 import repository.SyntaxHighlighterWordRepository;
 import javax.swing.*;
@@ -39,7 +39,106 @@ public class SyntaxHighlighterService implements Observer {
         SwingUtilities.invokeLater(this::applyHighlighting);
     }
 
+    private void applyHighlighting() {
+        try {
+            // Зберігаємо поточну позицію курсора
+            int cursorPosition = textPane.getCaretPosition();
 
+            // Зчитуємо весь текст
+            String text = textPane.getText();
+
+            // Розбиваємо текст на рядки
+            String[] lines = text.split("\n");
+
+            // Позиція для кожного символа в тексті
+            int offset = 0;
+
+            // Перевірка стилю "Default"
+            Style defaultStyle = doc.getStyle("Default");
+            if (defaultStyle == null) {
+                defaultStyle = doc.addStyle("Default", null);
+                StyleConstants.setForeground(defaultStyle, Color.BLACK);
+            }
+
+            // Скидаємо стилі для всього тексту
+            doc.setCharacterAttributes(0, text.length(), defaultStyle, true);
+
+            // Отримуємо всі слова для підсвітки з бази
+            List<SyntaxHighlighterWord> words = wordRepository.findByHighlighterId(1);
+
+            // Обробляємо кожен рядок
+            for (String line : lines) {
+                // Скидаємо стилі для поточного рядка
+                doc.setCharacterAttributes(offset, line.length(), defaultStyle, true);
+
+                // Підсвічуємо кожне знайдене слово
+                for (SyntaxHighlighterWord word : words) {
+                    String searchWord = word.getWord();
+                    String color = word.getColor();
+
+                    if (searchWord != null && color != null) {
+                        int index = 0;
+                        // Використовуємо регулярний вираз для пошуку повних слів
+                        String regex = "\\b" + Pattern.quote(searchWord) + "\\b";
+                        Pattern pattern = Pattern.compile(regex);
+                        Matcher matcher = pattern.matcher(line);
+
+                        while (matcher.find()) {
+                            try {
+                                // Перевіряємо і застосовуємо колір
+                                Color highlightColor = parseColor(color);
+                                if (highlightColor != null) {
+                                    Style style = doc.getStyle(searchWord);
+                                    if (style == null) {
+                                        style = doc.addStyle(searchWord, null);
+                                        StyleConstants.setForeground(style, highlightColor);
+                                    }
+                                    doc.setCharacterAttributes(offset + matcher.start(), searchWord.length(), style, true);
+                                }
+                            } catch (Exception e) {
+                                System.err.println("Invalid color format for word: " + searchWord);
+                            }
+                        }
+                    }
+                }
+
+                // Оновлюємо зміщення для наступного рядка
+                offset += line.length(); // Оновлюємо зміщення без додавання 1 для символа нового рядка
+            }
+
+            // Відновлюємо позицію курсора
+            textPane.setCaretPosition(cursorPosition);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Color parseColor(String color) {
+        try {
+            if (color.startsWith("#")) {
+                return Color.decode(color);
+            } else {
+                Field field = Color.class.getField(color.toLowerCase());
+                return (Color) field.get(null);
+            }
+        } catch (Exception e) {
+            System.err.println("Invalid color format: " + color);
+            return null;
+        }
+    }
+}
+
+
+
+
+    /* Підсвідка до 8 лаби
+    @Override
+    public void update(String data) {
+        SwingUtilities.invokeLater(this::applyHighlighting);
+    }
+
+     Підсвідка до 8 лаби
     private void applyHighlighting() {
         try {
             // Зберігаємо поточну позицію курсора
@@ -138,7 +237,7 @@ public class SyntaxHighlighterService implements Observer {
 }
 
 
-    /*
+
     public SyntaxHighlighterService(JTextPane textPane) {
         this.textPane = textPane;
         this.doc = textPane.getStyledDocument();
@@ -151,7 +250,7 @@ public class SyntaxHighlighterService implements Observer {
         // Налаштування стилю для звичайного тексту
         Style defaultStyle = doc.addStyle("Default", null);
         StyleConstants.setForeground(defaultStyle, Color.BLACK); // Чорний текст
-    }*/
+    }
 
 
 
