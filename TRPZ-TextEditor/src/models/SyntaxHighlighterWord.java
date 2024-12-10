@@ -1,47 +1,26 @@
 package models;
 
 public class SyntaxHighlighterWord {
-    private int id;
-    private int syntaxHighlighterId;
-    private String word;
-    private String color;
+    private final int syntaxHighlighterId;  // ID підсвітки
+    private final String word;              // Слово для підсвітки
+    private final int idColor;              // ID кольору
 
-    public SyntaxHighlighterWord(int id, int syntaxHighlighterId, String word, String color) {
-        this.id = id;
+    public SyntaxHighlighterWord(int syntaxHighlighterId, String word, int idColor) {
         this.syntaxHighlighterId = syntaxHighlighterId;
         this.word = word;
-        this.color = color;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.idColor = idColor;
     }
 
     public int getSyntaxHighlighterId() {
         return syntaxHighlighterId;
     }
 
-    public void setSyntaxHighlighterId(int syntaxHighlighterId) {
-        this.syntaxHighlighterId = syntaxHighlighterId;
-    }
-
     public String getWord() {
         return word;
     }
 
-    public void setWord(String word) {
-        this.word = word;
+    public int getIdColor() {
+        return idColor;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
 }
