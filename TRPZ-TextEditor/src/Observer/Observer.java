@@ -1,6 +1,8 @@
 package Observer;
 
+import javax.swing.*;
+
 public interface Observer {
-    void update(String data);
+    void update(JTextPane data);
 }
 

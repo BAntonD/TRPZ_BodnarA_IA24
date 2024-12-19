@@ -10,21 +10,22 @@ import java.util.Map;
 
 public class StyleFactory {
     private Map<String, Style> styleCache = new HashMap<>();
+
     public Style getStyle(String colorCode) {
+        System.out.println("[DEBUG] Необхідно стиль для кольору: " + colorCode);
         Style style = styleCache.get(colorCode);
         if (style == null) {
-            // Створюємо новий стиль
+            System.out.println("[DEBUG] Виклик створення нового стилю для кольору: " + colorCode);
             style = createNewStyle(colorCode);
             styleCache.put(colorCode, style);
+            System.out.println("[LOG] Створено новий стиль для кольору: " + colorCode);
         }
         return style;
     }
 
-
     public Style createNewStyle(String colorCode) {
-        // Тут ми створюємо новий стиль
         Style style = new StyleContext().addStyle(colorCode, null);
-        Color highlightColor = parseColor(colorCode);  // Використовуємо метод parseColor для перетворення кольору
+        Color highlightColor = parseColor(colorCode);  // Перетворення кольору
         StyleConstants.setForeground(style, highlightColor);
         return style;
     }

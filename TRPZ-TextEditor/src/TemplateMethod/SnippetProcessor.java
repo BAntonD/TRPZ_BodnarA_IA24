@@ -10,30 +10,30 @@ import javax.swing.*;
 import javax.swing.text.BadLocationException;
 
 public abstract class SnippetProcessor {
-
     private final ExactMatchHandler exactMatchHandler;
     private final SimilarMatchesHandler similarMatchesHandler;
     private final NoMatchHandler noMatchHandler;
+    private final SnippetService snippetService;
 
     public SnippetProcessor(ExactMatchHandler exactMatchHandler,
                             SimilarMatchesHandler similarMatchesHandler,
-                            NoMatchHandler noMatchHandler) {
+                            NoMatchHandler noMatchHandler,
+                            SnippetService snippetService) {
         this.exactMatchHandler = exactMatchHandler;
         this.similarMatchesHandler = similarMatchesHandler;
         this.noMatchHandler = noMatchHandler;
+        this.snippetService = snippetService; // snippetService не передається у SnippetProcessorImpl
     }
 
     public void processSnippet(String trigger, JTextPane textPane) {
         if (trigger.isEmpty()) {
             noMatchHandler.handleNoMatch("Text is empty. Please provide a valid trigger.");
         } else {
-            int idSetting = CurrentSettingRepository.getCurrentSettingId(); //отримуємо CurrentSettingId з окремого класу
-            int idSnippedList = SettingRepository.getSnippetListId(idSetting); //отримуємо SnippedListId з окремого класу
-            String exactMatch = SnippetRepository.getSnippetByTrigger(trigger, idSnippedList );// тут вже йде точной пошук
+            String exactMatch = snippetService.getExactSnippet(trigger);
             if (exactMatch != null) {
                 exactMatchHandler.handleExactMatch(exactMatch, textPane, trigger);
             } else {
-                List<Snippet> similarMatches = SnippetRepository.getSimilarSnippets(trigger, idSetting); // а потім вже це якщо там не буде точного збігу
+                List<Snippet> similarMatches = snippetService.getSimilarSnippets(trigger);
                 if (!similarMatches.isEmpty()) {
                     similarMatchesHandler.handleSimilarMatches(similarMatches);
                 } else {
@@ -42,5 +42,5 @@ public abstract class SnippetProcessor {
             }
         }
     }
-
 }
+

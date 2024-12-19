@@ -1,11 +1,16 @@
 package models;
 
 public class Bookmark {
-    private int id;
-    private Settings settings;
-    private int pageNumber;
-    private int lineNumber;
+    private int id; // Унікальний ідентифікатор закладки
+    private boolean state; // Стан (true, якщо закладка активна)
+    private int lineNumber; // Номер рядка, на якому збережена закладка
 
+    public Bookmark(int id) {
+        this.id = id;
+        this.state = false; // Початковий стан - неактивна закладка
+    }
+
+    // Геттери та сеттери
     public int getId() {
         return id;
     }
@@ -14,20 +19,12 @@ public class Bookmark {
         this.id = id;
     }
 
-    public Settings getSettings() {
-        return settings;
+    public boolean isState() {
+        return state;
     }
 
-    public void setSettings(Settings settings) {
-        this.settings = settings;
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
+    public void setState(boolean state) {
+        this.state = state;
     }
 
     public int getLineNumber() {
@@ -37,23 +34,7 @@ public class Bookmark {
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
     }
-
-    public Bookmark(int id, Settings settings, int pageNumber, int lineNumber) {
-        this.id = id;
-        this.settings = settings;
-        this.pageNumber = pageNumber;
-        this.lineNumber = lineNumber;
-    }
-
-    @Override
-    public String toString() {
-        return "Bookmark{" +
-                "id=" + id +
-                ", settings=" + settings +
-                ", pageNumber=" + pageNumber +
-                ", lineNumber=" + lineNumber +
-                '}';
-    }
 }
+
 
 

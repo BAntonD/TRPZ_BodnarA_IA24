@@ -1,7 +1,2 @@
-System.out.println();  System.out.println(); System.out.print(); a	
-System a
-System a
-System a
-System a
-System a
-System a
+System 
+out 

@@ -10,23 +10,6 @@ public class ColorsRepository {
         this.connection = connection;
     }
 
-    // Отримуємо колір за ID
-    /*
-    public Color getColorById(int idColor) {
-        String sql = "SELECT code FROM Colors WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, idColor);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                String colorCode = rs.getString("code");
-                return Color.decode(colorCode);  // перетворюємо hex-код в об'єкт Color
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }*/
-
     public String getColorCodeById(int idColor) throws SQLException {
         String query = "SELECT code FROM Colors WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
