@@ -2,10 +2,7 @@ package repository;
 
 import models.SyntaxHighlighterWord;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,34 +13,21 @@ public class SyntaxHighlighterWordRepository {
         this.connection = connection;
     }
 
-    public List<SyntaxHighlighterWord> findByHighlighterId(int highlighterId) {
-        List<SyntaxHighlighterWord> result = new ArrayList<>();
-        String query = "SELECT * FROM SyntaxHighlighterWord WHERE syntax_highlighter_id = ?";
-        System.out.println("Executing query: " + query + " with highlighterId = " + highlighterId); // Логування перед запитом
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, highlighterId);
-            ResultSet rs = stmt.executeQuery();
-            System.out.println("Query executed successfully, processing results...");
+    // Отримуємо всі слова для підсвітки за id підсвітки
+    public List<SyntaxHighlighterWord> findByHighlighterId(int syntaxHighlighterId) {
+        List<SyntaxHighlighterWord> words = new ArrayList<>();
+        String sql = "SELECT word, id_color FROM SyntaxHighlighterWord WHERE syntax_highlighter_id = ?";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, syntaxHighlighterId);
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                result.add(new SyntaxHighlighterWord(rs.getInt("id"), rs.getInt("syntax_highlighter_id"), rs.getString("word"), rs.getString("color")));
+                String word = rs.getString("word");
+                int idColor = rs.getInt("id_color");
+                words.add(new SyntaxHighlighterWord(syntaxHighlighterId, word, idColor));
             }
-            System.out.println("Found " + result.size() + " SyntaxHighlighterWord(s)."); // Логування результатів
         } catch (SQLException e) {
-            System.out.println("Error executing query: " + e.getMessage());
             e.printStackTrace();
         }
-        return result;
-    }
-
-
-    public void save(SyntaxHighlighterWord word) throws SQLException {
-        String query = "INSERT INTO SyntaxHighlighterWord (syntax_highlighter_id, word, color) VALUES (?, ?, ?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1, word.getSyntaxHighlighterId());
-            pstmt.setString(2, word.getWord());
-            pstmt.setString(3, word.getColor());
-            pstmt.executeUpdate();
-        }
+        return words;
     }
 }
-

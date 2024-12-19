@@ -1,5 +1,5 @@
 package Observer;
-
+/*
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,5 +16,5 @@ public class AutoSave implements Observer {
             System.err.println("Error saving text: " + e.getMessage());
         }
     }
-}
+}*/
 

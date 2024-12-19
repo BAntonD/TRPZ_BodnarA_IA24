@@ -26,7 +26,10 @@ public class Snippet {
         this.content = content;
     }
 
-
+    @Override
+    public String toString() {
+        return trigger + " - " + content;
+    }
 }
 
 
